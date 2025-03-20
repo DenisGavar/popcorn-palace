@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   ParseIntPipe,
+  NotFoundException,
 } from '@nestjs/common';
 import { ShowtimesService } from './showtimes.service';
 import { CreateShowtimeDto } from './dto/create-showtime.dto';
@@ -29,8 +30,12 @@ export class ShowtimesController {
   @Get(':id')
   @HttpCode(200)
   @ApiOkResponse({ type: ResponseShowtimeDto })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.showtimesService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const showtime = await this.showtimesService.findOne(id);
+    if (!showtime) {
+      throw new NotFoundException(`Showtime with id: ${id} does not exist.`);
+    }
+    return showtime;
   }
 
   @Put('update/:id')
