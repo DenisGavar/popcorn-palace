@@ -29,15 +29,7 @@ export class MovieEntity implements Movie {
   @ApiProperty({ example: 2001, description: 'The release year of the movie' })
   releaseYear: number;
 
-  @ApiProperty({
-    example: '2025-02-14T14:47:46.125Z',
-    description: 'The date and time when the movie record was created',
-  })
   createdAt: Date;
 
-  @ApiProperty({
-    example: '2025-02-15T10:20:30.456Z',
-    description: 'The date and time when the movie record was last updated',
-  })
   updatedAt: Date;
 }
