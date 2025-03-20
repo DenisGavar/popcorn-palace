@@ -8,31 +8,11 @@ export class ShowtimesService {
   constructor(private prisma: PrismaService) {}
 
   create(createShowtimeDto: CreateShowtimeDto) {
-    return this.prisma.showtime.create({
-      data: createShowtimeDto,
-      select: {
-        id: true,
-        price: true,
-        movieId: true,
-        theater: true,
-        startTime: true,
-        endTime: true,
-      },
-    });
+    return this.prisma.showtime.create({ data: createShowtimeDto });
   }
 
   findOne(id: number) {
-    return this.prisma.showtime.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        price: true,
-        movieId: true,
-        theater: true,
-        startTime: true,
-        endTime: true,
-      },
-    });
+    return this.prisma.showtime.findUnique({ where: { id } });
   }
 
   async update(id: number, updateShowtimeDto: UpdateShowtimeDto) {
