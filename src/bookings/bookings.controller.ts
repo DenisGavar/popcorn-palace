@@ -2,7 +2,7 @@ import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { ApiCreatedResponse } from '@nestjs/swagger';
-import { ResponseBookingDto } from './dto/response-booking.dto';
+import { BookingEntity } from './entities/booking.entity';
 
 @Controller('bookings')
 export class BookingsController {
@@ -10,7 +10,7 @@ export class BookingsController {
 
   @Post()
   @HttpCode(201)
-  @ApiCreatedResponse({ type: ResponseBookingDto })
+  @ApiCreatedResponse({ type: BookingEntity })
   create(@Body() createBookingDto: CreateBookingDto) {
     return this.bookingsService.create(createBookingDto);
   }
