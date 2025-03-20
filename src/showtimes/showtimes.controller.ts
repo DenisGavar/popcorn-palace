@@ -14,7 +14,7 @@ import { ShowtimesService } from './showtimes.service';
 import { CreateShowtimeDto } from './dto/create-showtime.dto';
 import { UpdateShowtimeDto } from './dto/update-showtime.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { ResponseShowtimeDto } from './dto/response-showtime.dto';
+import { ShowtimeEntity } from './entities/showtime.entity';
 
 @Controller('showtimes')
 export class ShowtimesController {
@@ -22,14 +22,14 @@ export class ShowtimesController {
 
   @Post()
   @HttpCode(201)
-  @ApiCreatedResponse({ type: ResponseShowtimeDto })
+  @ApiCreatedResponse({ type: ShowtimeEntity })
   create(@Body() createShowtimeDto: CreateShowtimeDto) {
     return this.showtimesService.create(createShowtimeDto);
   }
 
   @Get(':id')
   @HttpCode(200)
-  @ApiOkResponse({ type: ResponseShowtimeDto })
+  @ApiOkResponse({ type: ShowtimeEntity })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const showtime = await this.showtimesService.findOne(id);
     if (!showtime) {
