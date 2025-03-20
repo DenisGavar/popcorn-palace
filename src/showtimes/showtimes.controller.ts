@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   HttpCode,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ShowtimesService } from './showtimes.service';
 import { CreateShowtimeDto } from './dto/create-showtime.dto';
@@ -28,22 +29,22 @@ export class ShowtimesController {
   @Get(':id')
   @HttpCode(200)
   @ApiOkResponse({ type: ResponseShowtimeDto })
-  findOne(@Param('id') id: string) {
-    return this.showtimesService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.showtimesService.findOne(id);
   }
 
   @Put('update/:id')
   @HttpCode(200)
   async update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateShowtimeDto: UpdateShowtimeDto,
   ) {
-    await this.showtimesService.update(+id, updateShowtimeDto);
+    await this.showtimesService.update(id, updateShowtimeDto);
   }
 
   @Delete(':id')
   @HttpCode(200)
-  async remove(@Param('id') id: string) {
-    await this.showtimesService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.showtimesService.remove(id);
   }
 }
