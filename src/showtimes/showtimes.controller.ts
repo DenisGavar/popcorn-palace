@@ -23,8 +23,10 @@ export class ShowtimesController {
   @Post()
   @HttpCode(201)
   @ApiCreatedResponse({ type: ShowtimeEntity })
-  create(@Body() createShowtimeDto: CreateShowtimeDto) {
-    return this.showtimesService.create(createShowtimeDto);
+  async create(@Body() createShowtimeDto: CreateShowtimeDto) {
+    return new ShowtimeEntity(
+      await this.showtimesService.create(createShowtimeDto),
+    );
   }
 
   @Get(':id')
@@ -35,7 +37,7 @@ export class ShowtimesController {
     if (!showtime) {
       throw new NotFoundException(`Showtime with id: ${id} does not exist.`);
     }
-    return showtime;
+    return new ShowtimeEntity(showtime);
   }
 
   @Put('update/:id')
