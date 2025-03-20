@@ -34,14 +34,14 @@ export class MoviesService {
     });
   }
 
-  update(title: string, updateMovieDto: UpdateMovieDto) {
-    return this.prisma.movie.update({
+  async update(title: string, updateMovieDto: UpdateMovieDto) {
+    await this.prisma.movie.update({
       where: { title },
       data: updateMovieDto,
     });
   }
 
-  remove(title: string) {
-    return this.prisma.movie.delete({ where: { title } });
+  async remove(title: string) {
+    await this.prisma.movie.delete({ where: { title } });
   }
 }
