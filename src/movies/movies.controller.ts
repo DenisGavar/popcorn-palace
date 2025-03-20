@@ -12,7 +12,7 @@ import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { ResponseMovieDto } from './dto/response-movie.dto';
+import { MovieEntity } from './entities/movie.entity';
 
 @Controller('movies')
 export class MoviesController {
@@ -20,14 +20,14 @@ export class MoviesController {
 
   @Post()
   @HttpCode(201)
-  @ApiCreatedResponse({ type: ResponseMovieDto })
+  @ApiCreatedResponse({ type: MovieEntity })
   create(@Body() createMovieDto: CreateMovieDto) {
     return this.moviesService.create(createMovieDto);
   }
 
   @Get('all')
   @HttpCode(200)
-  @ApiOkResponse({ type: ResponseMovieDto, isArray: true })
+  @ApiOkResponse({ type: MovieEntity, isArray: true })
   findAll() {
     return this.moviesService.findAll();
   }
