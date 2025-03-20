@@ -8,30 +8,11 @@ export class MoviesService {
   constructor(private prisma: PrismaService) {}
 
   create(createMovieDto: CreateMovieDto) {
-    return this.prisma.movie.create({
-      data: createMovieDto,
-      select: {
-        id: true,
-        title: true,
-        genre: true,
-        duration: true,
-        rating: true,
-        releaseYear: true,
-      },
-    });
+    return this.prisma.movie.create({ data: createMovieDto });
   }
 
   findAll() {
-    return this.prisma.movie.findMany({
-      select: {
-        id: true,
-        title: true,
-        genre: true,
-        duration: true,
-        rating: true,
-        releaseYear: true,
-      },
-    });
+    return this.prisma.movie.findMany();
   }
 
   async update(title: string, updateMovieDto: UpdateMovieDto) {
