@@ -11,7 +11,9 @@ export class BookingsController {
   @Post()
   @HttpCode(201)
   @ApiCreatedResponse({ type: BookingEntity })
-  create(@Body() createBookingDto: CreateBookingDto) {
-    return this.bookingsService.create(createBookingDto);
+  async create(@Body() createBookingDto: CreateBookingDto) {
+    return new BookingEntity(
+      await this.bookingsService.create(createBookingDto),
+    );
   }
 }
