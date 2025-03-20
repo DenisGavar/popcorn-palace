@@ -21,15 +21,16 @@ export class MoviesController {
   @Post()
   @HttpCode(201)
   @ApiCreatedResponse({ type: MovieEntity })
-  create(@Body() createMovieDto: CreateMovieDto) {
-    return this.moviesService.create(createMovieDto);
+  async create(@Body() createMovieDto: CreateMovieDto) {
+    return new MovieEntity(await this.moviesService.create(createMovieDto));
   }
 
   @Get('all')
   @HttpCode(200)
   @ApiOkResponse({ type: MovieEntity, isArray: true })
-  findAll() {
-    return this.moviesService.findAll();
+  async findAll() {
+    const movies = await this.moviesService.findAll();
+    return movies.map((movie) => new MovieEntity(movie));
   }
 
   @Put('update/:title')

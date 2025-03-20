@@ -1,7 +1,12 @@
 import { Movie } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 export class MovieEntity implements Movie {
+  constructor(partial: Partial<MovieEntity>) {
+    Object.assign(this, partial);
+  }
+
   @ApiProperty({
     example: 1,
     description: 'The unique identifier of the movie',
@@ -29,7 +34,9 @@ export class MovieEntity implements Movie {
   @ApiProperty({ example: 2001, description: 'The release year of the movie' })
   releaseYear: number;
 
+  @Exclude()
   createdAt: Date;
 
+  @Exclude()
   updatedAt: Date;
 }
