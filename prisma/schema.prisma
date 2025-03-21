@@ -40,6 +40,8 @@ model Showtime {
   updatedAt     DateTime @updatedAt
 
   bookings      Booking[]
+
+  @@index([theater, startTime, endTime])
 }
 
 model Booking {
