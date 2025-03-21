@@ -7,7 +7,24 @@ import {
   IsString,
   IsDate,
   IsNotEmpty,
+  Validate,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationArguments,
 } from 'class-validator';
+
+@ValidatorConstraint({ name: 'isStartTimeBeforeEndTime', async: false })
+export class IsStartTimeBeforeEndTime implements ValidatorConstraintInterface {
+  validate(value: Date, args: ValidationArguments): boolean {
+    const endTime = args.object[args.constraints[0]];
+    if (!(value instanceof Date) || !(endTime instanceof Date)) return false;
+    return value.getTime() < endTime.getTime();
+  }
+
+  defaultMessage(args: ValidationArguments): string {
+    return `Start time must be before ${args.constraints[0]}`;
+  }
+}
 
 export class CreateShowtimeDto {
   @ApiProperty({
@@ -40,6 +57,7 @@ export class CreateShowtimeDto {
   @IsNotEmpty()
   @IsDate()
   @Type(() => Date)
+  @Validate(IsStartTimeBeforeEndTime, ['endTime'])
   startTime: Date;
 
   @ApiProperty({
