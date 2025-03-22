@@ -34,14 +34,15 @@ describe('ShowtimesService', () => {
       endTime: new Date('2025-02-14T14:47:46.125405Z'),
     };
 
+    const createdShowtime = {
+      id: 1,
+      ...createShowtimeDto,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
     it('should create a showtime when no conflicts', async () => {
       prisma.showtime.findMany.mockResolvedValue([]);
-      const createdShowtime = {
-        id: 1,
-        ...createShowtimeDto,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
       prisma.showtime.create.mockResolvedValue(createdShowtime);
 
       const result = await service.create(createShowtimeDto);
