@@ -46,6 +46,7 @@ export class MoviesController {
   @Delete(':title')
   @HttpCode(200)
   async remove(@Param('title') title: string) {
-    await this.moviesService.remove(title);
+    const decodedTitle = decodeURIComponent(title);
+    await this.moviesService.remove(decodedTitle);
   }
 }
