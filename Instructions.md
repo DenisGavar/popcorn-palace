@@ -44,7 +44,7 @@ The system provides the following APIs:
 - **PostgreSQL** – A relational database.
 - **Swagger** – For API documentation and visualization.
 - **ESLint & Prettier** – For maintaining consistent code style.
-- **Jest** – For unit testing.
+- **Jest** – For unit and end-to-end testing.
 - **Docker Compose** – For easily running the PostgreSQL container.
 
 ---
@@ -171,6 +171,8 @@ The project uses Jest for testing.
     npm run test
     ```
 * Run End-to-End Tests:
+
+    Note: Before running end-to-end tests, make sure to start the PostgreSQL container as described in [Starting the Database (PostgreSQL)](#starting-the-database-postgresql). End-to-end tests will be executed against a separate test database.
     ```bash
     npm run test:e2e
     ```
