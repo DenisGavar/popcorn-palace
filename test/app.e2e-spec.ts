@@ -134,6 +134,12 @@ describe('AppController (e2e)', () => {
     statusCode: 404,
   };
 
+  const showtimeNotFoundWithoutIdError = {
+    error: 'NOT_FOUND',
+    message: 'Showtime not found',
+    statusCode: 404,
+  };
+
   describe('movies', () => {
     describe('/movies (POST)', () => {
       it('successful creation', async () => {
@@ -336,10 +342,45 @@ describe('AppController (e2e)', () => {
       it('error not found', async () => {
         const response = await request(app.getHttpServer())
           .get(`/showtimes/${anotherShowtimeId}`)
-          .send(createMovieDto1)
           .expect(404);
 
         expect(response.body).toEqual(showtimeNotFoundError);
+      });
+    });
+
+    // '/showtimes/update/{id}'
+
+    describe('/showtimes/{id} (DELETE)', () => {
+      it('successful deletion', async () => {
+        const responseMovie = await request(app.getHttpServer())
+          .post('/movies')
+          .send(createMovieDto1)
+          .expect(201);
+        const movieId = responseMovie.body.id;
+
+        const responseShowtime = await request(app.getHttpServer())
+          .post('/showtimes')
+          .send({ movieId: movieId, ...createShowtimeDto })
+          .expect(201);
+        const showtimeId = responseShowtime.body.id;
+
+        await request(app.getHttpServer())
+          .delete(`/showtimes/${showtimeId}`)
+          .expect(204);
+
+        const response = await request(app.getHttpServer())
+          .get(`/showtimes/${anotherShowtimeId}`)
+          .expect(404);
+
+        expect(response.body).toEqual(showtimeNotFoundError);
+      });
+
+      it('error not found', async () => {
+        const response = await request(app.getHttpServer())
+          .delete(`/showtimes/${anotherShowtimeId}`)
+          .expect(404);
+
+        expect(response.body).toEqual(showtimeNotFoundWithoutIdError);
       });
     });
   });
