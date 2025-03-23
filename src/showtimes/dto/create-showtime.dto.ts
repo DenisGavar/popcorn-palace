@@ -28,7 +28,7 @@ export class IsStartTimeBeforeEndTime implements ValidatorConstraintInterface {
 
 export class CreateShowtimeDto {
   @ApiProperty({
-    example: 1,
+    example: 12345,
     description: 'The ID of the movie associated with this showtime',
   })
   @IsNotEmpty()
