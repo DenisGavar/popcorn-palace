@@ -104,14 +104,13 @@ describe('AppController (e2e)', () => {
     statusCode: 404,
   };
 
-  const anotherTMovieTitle = 'The Lord of the Rings: The Return of the King';
+  const anotherMovieTitle = 'The Lord of the Rings: The Return of the King';
 
   const createShowtimeDto = {
-    //movieId: ???,
     price: 20.2,
     theater: 'Sample Theater',
-    startTime: new Date('2025-02-14T11:47:46.125Z'),
-    endTime: new Date('2025-02-14T14:47:46.125Z'),
+    startTime: '2025-02-14T11:47:46.125Z',
+    endTime: '2025-02-14T14:47:46.125Z',
   };
 
   const showtimeForeignKeyError = {
@@ -125,6 +124,14 @@ describe('AppController (e2e)', () => {
     message: 'Showtime overlaps with existing showtimes in the same theater',
     error: 'Conflict',
     statusCode: 409,
+  };
+
+  const anotherShowtimeId = 1;
+
+  const showtimeNotFoundError = {
+    message: `Showtime with id: ${anotherShowtimeId} does not exist.`,
+    error: 'Not Found',
+    statusCode: 404,
   };
 
   describe('movies', () => {
@@ -217,7 +224,7 @@ describe('AppController (e2e)', () => {
 
       it('error not found', async () => {
         const response = await request(app.getHttpServer())
-          .put(`/movies/update/${anotherTMovieTitle}`)
+          .put(`/movies/update/${anotherMovieTitle}`)
           .send(createMovieDto1)
           .expect(404);
 
@@ -245,7 +252,7 @@ describe('AppController (e2e)', () => {
 
       it('error not found', async () => {
         const response = await request(app.getHttpServer())
-          .delete(`/movies/${anotherTMovieTitle}`)
+          .delete(`/movies/${anotherMovieTitle}`)
           .expect(404);
 
         expect(response.body).toEqual(movieNotFoundError);
@@ -298,6 +305,41 @@ describe('AppController (e2e)', () => {
           .expect(409);
 
         expect(response.body).toEqual(showtimeOverlapsError);
+      });
+    });
+
+    describe('/showtimes/{id} (GET)', () => {
+      it('successful get', async () => {
+        const responseMovie = await request(app.getHttpServer())
+          .post('/movies')
+          .send(createMovieDto1)
+          .expect(201);
+        const movieId = responseMovie.body.id;
+
+        const responseShowtime = await request(app.getHttpServer())
+          .post('/showtimes')
+          .send({ movieId: movieId, ...createShowtimeDto })
+          .expect(201);
+        const showtimeId = responseShowtime.body.id;
+
+        const response = await request(app.getHttpServer())
+          .get(`/showtimes/${showtimeId}`)
+          .expect(200);
+
+        expect(response.body).toEqual({
+          id: showtimeId,
+          movieId: movieId,
+          ...createShowtimeDto,
+        });
+      });
+
+      it('error not found', async () => {
+        const response = await request(app.getHttpServer())
+          .get(`/showtimes/${anotherShowtimeId}`)
+          .send(createMovieDto1)
+          .expect(404);
+
+        expect(response.body).toEqual(showtimeNotFoundError);
       });
     });
   });
