@@ -41,7 +41,7 @@ export class ShowtimesController {
   }
 
   @Put('update/:id')
-  @HttpCode(200)
+  @HttpCode(204)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateShowtimeDto: UpdateShowtimeDto,
@@ -50,7 +50,7 @@ export class ShowtimesController {
   }
 
   @Delete(':id')
-  @HttpCode(200)
+  @HttpCode(204)
   async remove(@Param('id', ParseIntPipe) id: number) {
     await this.showtimesService.remove(id);
   }
