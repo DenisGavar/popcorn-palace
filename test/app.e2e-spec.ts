@@ -98,13 +98,34 @@ describe('AppController (e2e)', () => {
     statusCode: 409,
   };
 
-  const MovieNotFoundError = {
+  const movieNotFoundError = {
     message: 'Movie not found',
     error: 'NOT_FOUND',
     statusCode: 404,
   };
 
-  const anotherTitle = 'The Lord of the Rings: The Return of the King';
+  const anotherTMovieTitle = 'The Lord of the Rings: The Return of the King';
+
+  const createShowtimeDto = {
+    //movieId: ???,
+    price: 20.2,
+    theater: 'Sample Theater',
+    startTime: new Date('2025-02-14T11:47:46.125Z'),
+    endTime: new Date('2025-02-14T14:47:46.125Z'),
+  };
+
+  const showtimeForeignKeyError = {
+    message:
+      'Foreign key constraint failed. A connected resource could not be found. Double-check your input and resubmit',
+    error: 'BAD_REQUEST',
+    statusCode: 400,
+  };
+
+  const showtimeOverlapsError = {
+    message: 'Showtime overlaps with existing showtimes in the same theater',
+    error: 'Conflict',
+    statusCode: 409,
+  };
 
   describe('movies', () => {
     describe('/movies (POST)', () => {
@@ -196,11 +217,11 @@ describe('AppController (e2e)', () => {
 
       it('error not found', async () => {
         const response = await request(app.getHttpServer())
-          .put(`/movies/update/${anotherTitle}`)
+          .put(`/movies/update/${anotherTMovieTitle}`)
           .send(createMovieDto1)
           .expect(404);
 
-        expect(response.body).toEqual(MovieNotFoundError);
+        expect(response.body).toEqual(movieNotFoundError);
       });
     });
 
@@ -224,10 +245,59 @@ describe('AppController (e2e)', () => {
 
       it('error not found', async () => {
         const response = await request(app.getHttpServer())
-          .delete(`/movies/${anotherTitle}`)
+          .delete(`/movies/${anotherTMovieTitle}`)
           .expect(404);
 
-        expect(response.body).toEqual(MovieNotFoundError);
+        expect(response.body).toEqual(movieNotFoundError);
+      });
+    });
+  });
+
+  describe('showtimes', () => {
+    describe('/showtimes (POST)', () => {
+      it('successful creation', async () => {
+        const responseMovie = await request(app.getHttpServer())
+          .post('/movies')
+          .send(createMovieDto1)
+          .expect(201);
+        const movieId = responseMovie.body.id;
+
+        const response = await request(app.getHttpServer())
+          .post('/showtimes')
+          .send({ movieId: movieId, ...createShowtimeDto })
+          .expect(201);
+
+        expect(response.body).toHaveProperty('id');
+        expect(response.body.theater).toBe(createShowtimeDto.theater);
+      });
+
+      it('foreign key constraint failed', async () => {
+        const response = await request(app.getHttpServer())
+          .post('/showtimes')
+          .send({ movieId: 1, ...createShowtimeDto })
+          .expect(400);
+
+        expect(response.body).toEqual(showtimeForeignKeyError);
+      });
+
+      it('overlaps creation', async () => {
+        const responseMovie = await request(app.getHttpServer())
+          .post('/movies')
+          .send(createMovieDto1)
+          .expect(201);
+        const movieId = responseMovie.body.id;
+
+        await request(app.getHttpServer())
+          .post('/showtimes')
+          .send({ movieId: movieId, ...createShowtimeDto })
+          .expect(201);
+
+        const response = await request(app.getHttpServer())
+          .post('/showtimes')
+          .send({ movieId: movieId, ...createShowtimeDto })
+          .expect(409);
+
+        expect(response.body).toEqual(showtimeOverlapsError);
       });
     });
   });
