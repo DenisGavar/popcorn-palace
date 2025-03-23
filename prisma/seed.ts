@@ -6,6 +6,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+  // create the first movie
   await prisma.movie.upsert({
     where: { title: 'Sample Movie Title 1' },
     update: {},
@@ -19,6 +20,7 @@ async function main() {
     },
   });
 
+  // create the second movie
   await prisma.movie.upsert({
     where: { title: 'Sample Movie Title 2' },
     update: {},
@@ -32,6 +34,7 @@ async function main() {
     },
   });
 
+  // create a showtime for the first movie
   await prisma.showtime.upsert({
     where: { id: 1 },
     update: {},
@@ -45,6 +48,7 @@ async function main() {
     },
   });
 
+  // create a booking for the showtime
   await prisma.booking.upsert({
     where: { id: 'd1a6423b-4469-4b00-8c5f-e3cfc42eacae' },
     update: {},

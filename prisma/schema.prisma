@@ -13,46 +13,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// a movie table
 model Movie {
   id            Int     @id @default(autoincrement())
   title         String  @unique
   genre         String
   duration      Int
   rating        Float
-  releaseYear   Int
+  releaseYear   Int     @map("release_year")
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())  @map("created_at")
+  updatedAt     DateTime @updatedAt       @map("updated_at")
 
   showtimes     Showtime[]
+
+  // change the table name
+  @@map("movies")
 }
 
 model Showtime {
-  id            Int     @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   price         Float
-  movieId       Int
-  movie         Movie   @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  movieId       Int       @map("movie_id")
+  movie         Movie     @relation(fields: [movieId], references: [id], onDelete: Cascade)
   theater       String
-  startTime     DateTime
-  endTime       DateTime
+  startTime     DateTime  @map("start_time")
+  endTime       DateTime  @map("end_time")
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime  @default(now())  @map("created_at")
+  updatedAt     DateTime  @updatedAt       @map("updated_at")
 
   bookings      Booking[]
 
+  // change the table name
+  @@map("showtimes")
+  // create an index for the search "No overlapping showtimes for the same theater"
   @@index([theater, startTime, endTime])
 }
 
 model Booking {
   id            String   @id @default(uuid())
-  showtimeId    Int
+  showtimeId    Int      @map("showtime_id")
   showtime      Showtime @relation(fields: [showtimeId], references: [id], onDelete: Cascade)
-  seatNumber    Int
+  seatNumber    Int      @map("seat_number")
   userId        String
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())  @map("created_at")
+  updatedAt     DateTime @updatedAt       @map("updated_at")
 
+  // change the table name
+  @@map("bookings")
+  // ensure no seat is booked twice for the exact showtime
   @@unique([showtimeId, seatNumber])
 }
