@@ -9,7 +9,6 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
     { code: 'P2002', status: HttpStatus.CONFLICT },
     { code: 'P2003', status: HttpStatus.BAD_REQUEST },
     { code: 'P2025', status: HttpStatus.NOT_FOUND },
-    // TODO: add more errors if necessary
   ];
 
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
@@ -35,10 +34,15 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
     switch (exception.code) {
       case 'P2002':
         const fields = (exception.meta?.target as string[])?.join(', ');
-        return `Unique constraint failed on: ${fields || 'unknown fields'}`;
+        const modelName = exception.meta?.modelName || 'item';
+
+        if (fields && modelName) {
+          return `A ${modelName} with this ${fields} already exists. Please use a different ${fields}.`;
+        }
+        return 'This data conflicts with an existing entry. Please provide unique values.';
 
       case 'P2003':
-        return `Foreign key constraint failed`;
+        return 'Foreign key constraint failed. A connected resource could not be found. Double-check your input and resubmit';
 
       case 'P2025':
         const model = exception.meta?.modelName as string;
