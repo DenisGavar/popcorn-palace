@@ -34,7 +34,7 @@ export class MoviesController {
   }
 
   @Put('update/:title')
-  @HttpCode(200)
+  @HttpCode(204)
   async update(
     @Param('title') title: string,
     @Body() updateMovieDto: UpdateMovieDto,
@@ -44,7 +44,7 @@ export class MoviesController {
   }
 
   @Delete(':title')
-  @HttpCode(200)
+  @HttpCode(204)
   async remove(@Param('title') title: string) {
     const decodedTitle = decodeURIComponent(title);
     await this.moviesService.remove(decodedTitle);
