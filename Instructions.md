@@ -97,7 +97,7 @@ To create the necessary tables in the database, you must apply the existing Pris
 
 1. Apply the migrations:
     ```bash
-    npx prisma migrate dev
+    npx prisma migrate deploy
     ```
     This command creates the tables in the database as defined in your Prisma schema.
 
