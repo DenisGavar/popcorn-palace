@@ -18,6 +18,7 @@
   - [Showtimes API](#showtimes-api)
   - [Bookings API](#bookings-api)
 - [Testing](#testing)
+- [Notes](#notes)
 - [License](#license)
 
 ---
@@ -190,6 +191,22 @@ The project uses Jest for testing.
     ```bash
     npm run test:cov
     ```
+
+---
+
+## Notes
+Note that I have deviated from the API originally specified in the [README.md](README.md). The following changes have been made:
+
+* HTTP Request Methods:
+
+    * Changed the update endpoints for movies and showtimes from using POST to PUT.
+
+* HTTP Response Codes:
+
+    * For POST methods, the response code has been changed from 200 to 201 to indicate that a new resource has been created.
+    * For PUT and DELETE methods, the response code has been changed from 200 to 204 because these methods do not return content.
+    
+These changes better align with RESTful best practices. All changes have been approved by the TDP Israel team via email.
 
 ---
 
