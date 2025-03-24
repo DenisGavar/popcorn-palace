@@ -42,8 +42,8 @@ async function main() {
       id: 1,
       movieId: 12345,
       theater: 'Sample Theater',
-      startTime: new Date('2025-02-14T11:47:46.125405Z'),
-      endTime: new Date('2025-02-14T14:47:46.125405Z'),
+      startTime: new Date('2025-02-14T11:47:46.125Z'),
+      endTime: new Date('2025-02-14T14:47:46.125Z'),
       price: 50.2,
     },
   });
