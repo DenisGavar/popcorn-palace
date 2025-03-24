@@ -5,6 +5,7 @@
 - [Project Overview](#project-overview)
 - [Functionality](#functionality)
 - [Technologies Used](#technologies-used)
+- [Live Deployment](#live-deployment)
 - [Installation and Setup](#installation-and-setup)
   - [Prerequisites](#prerequisites)
   - [Cloning the Repository and Installing Dependencies](#cloning-the-repository-and-installing-dependencies)
@@ -46,6 +47,15 @@ The system provides the following APIs:
 - **ESLint & Prettier** – For maintaining consistent code style.
 - **Jest** – For unit and end-to-end testing.
 - **Docker Compose** – For easily running the PostgreSQL container.
+
+---
+
+## Live Deployment
+
+* The live service is deployed on Render and is available at:
+    https://popcorn-palace.onrender.com/
+* Swagger documentation is available at:
+    https://popcorn-palace.onrender.com/api
 
 ---
 
