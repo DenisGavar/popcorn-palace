@@ -8,12 +8,15 @@ import helmet from 'helmet';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // security settings
   app.enableCors();
   app.use(helmet());
 
+  // validation & serialization
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
+  // swagger settings
   const config = new DocumentBuilder()
     .setTitle('Popcorn Palace')
     .setDescription('Popcorn Palace Movie Ticket Booking System')
@@ -23,6 +26,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  // global prisma error handling
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 

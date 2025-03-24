@@ -22,6 +22,7 @@ model Movie {
   rating        Float
   releaseYear   Int     @map("release_year")
 
+  // service fields
   createdAt     DateTime @default(now())  @map("created_at")
   updatedAt     DateTime @updatedAt       @map("updated_at")
 
@@ -40,6 +41,7 @@ model Showtime {
   startTime     DateTime  @map("start_time")
   endTime       DateTime  @map("end_time")
 
+  // service fields
   createdAt     DateTime  @default(now())  @map("created_at")
   updatedAt     DateTime  @updatedAt       @map("updated_at")
 
@@ -58,6 +60,7 @@ model Booking {
   seatNumber    Int      @map("seat_number")
   userId        String
 
+  // service fields
   createdAt     DateTime @default(now())  @map("created_at")
   updatedAt     DateTime @updatedAt       @map("updated_at")
 

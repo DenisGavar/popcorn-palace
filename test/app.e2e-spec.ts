@@ -40,6 +40,7 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
+  // clear the DB
   beforeEach(async () => {
     await prisma.$transaction([
       prisma.booking.deleteMany(),
@@ -48,6 +49,7 @@ describe('AppController (e2e)', () => {
     ]);
   });
 
+  // close all the connections
   afterAll(async () => {
     await prisma.$disconnect();
     await app.close();

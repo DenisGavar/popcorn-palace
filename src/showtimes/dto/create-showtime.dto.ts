@@ -13,6 +13,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
+// check that startTime is earlier than endTime
 @ValidatorConstraint({ name: 'isStartTimeBeforeEndTime', async: false })
 export class IsStartTimeBeforeEndTime implements ValidatorConstraintInterface {
   validate(value: Date, args: ValidationArguments): boolean {
