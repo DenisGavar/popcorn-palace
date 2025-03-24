@@ -147,6 +147,18 @@ describe('AppController (e2e)', () => {
     statusCode: 404,
   };
 
+  const createBookingDto = {
+    seatNumber: 15,
+    userId: '84438967-f68f-4fa0-b620-0f08217e76af',
+  };
+
+  const sameBookingError = {
+    error: 'CONFLICT',
+    message:
+      'A Booking with this showtime_id, seat_number already exists. Please use a different showtime_id, seat_number.',
+    statusCode: 409,
+  };
+
   describe('movies', () => {
     describe('/movies (POST)', () => {
       it('successful creation', async () => {
@@ -426,6 +438,58 @@ describe('AppController (e2e)', () => {
           .expect(404);
 
         expect(response.body).toEqual(showtimeNotFoundWithoutIdError);
+      });
+    });
+  });
+
+  describe('bookings', () => {
+    describe('/bookings (POST', () => {
+      it('successful creation', async () => {
+        const responseMovie = await request(app.getHttpServer())
+          .post('/movies')
+          .send(createMovieDto1)
+          .expect(201);
+        const movieId = responseMovie.body.id;
+
+        const responseShowtime = await request(app.getHttpServer())
+          .post('/showtimes')
+          .send({ movieId: movieId, ...createShowtimeDto })
+          .expect(201);
+        const showtimeId = responseShowtime.body.id;
+
+        const response = await request(app.getHttpServer())
+          .post('/bookings')
+          .send({ showtimeId: showtimeId, ...createBookingDto })
+          .expect(201);
+
+        expect(response.body).toHaveProperty('bookingId');
+      });
+
+      it('seat is booked', async () => {
+        const responseMovie = await request(app.getHttpServer())
+          .post('/movies')
+          .send(createMovieDto1)
+          .expect(201);
+        const movieId = responseMovie.body.id;
+
+        const responseShowtime = await request(app.getHttpServer())
+          .post('/showtimes')
+          .send({ movieId: movieId, ...createShowtimeDto })
+          .expect(201);
+        const showtimeId = responseShowtime.body.id;
+
+        await request(app.getHttpServer())
+          .post('/bookings')
+          .send({ showtimeId: showtimeId, ...createBookingDto })
+          .expect(201);
+
+        // one more time the same showtime and the seat
+        const response = await request(app.getHttpServer())
+          .post('/bookings')
+          .send({ showtimeId: showtimeId, ...createBookingDto })
+          .expect(409);
+
+        expect(response.body).toEqual(sameBookingError);
       });
     });
   });
