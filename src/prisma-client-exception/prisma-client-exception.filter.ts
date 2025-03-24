@@ -16,6 +16,7 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
+    // get HttpStatus
     const mapping = this.errorMappings.find((m) => m.code === exception.code);
 
     if (!mapping) {
@@ -30,8 +31,10 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
     });
   }
 
+  // generate an error message
   getMessage(exception: Prisma.PrismaClientKnownRequestError): string {
     switch (exception.code) {
+      // "Unique constraint failed on the {constraint}"
       case 'P2002':
         const fields = (exception.meta?.target as string[])?.join(', ');
         const modelName = exception.meta?.modelName || 'item';
@@ -41,9 +44,11 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
         }
         return 'This data conflicts with an existing entry. Please provide unique values.';
 
+      // "Foreign key constraint failed on the field: {field_name}"
       case 'P2003':
         return 'Foreign key constraint failed. A connected resource could not be found. Double-check your input and resubmit';
 
+      // "An operation failed because it depends on one or more records that were required but not found. {cause}"
       case 'P2025':
         const model = exception.meta?.modelName as string;
         return `${model || 'Record'} not found`;

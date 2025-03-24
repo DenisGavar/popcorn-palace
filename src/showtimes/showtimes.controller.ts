@@ -34,6 +34,7 @@ export class ShowtimesController {
   @ApiOkResponse({ type: ShowtimeEntity })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const showtime = await this.showtimesService.findOne(id);
+    // check if showtime exists
     if (!showtime) {
       throw new NotFoundException(`Showtime with id: ${id} does not exist.`);
     }
