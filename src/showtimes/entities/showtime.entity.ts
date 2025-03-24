@@ -29,13 +29,13 @@ export class ShowtimeEntity implements Showtime {
   theater: string;
 
   @ApiProperty({
-    example: '2025-02-14T11:47:46.125405Z',
+    example: '2025-02-14T11:47:46.125Z',
     description: 'The start time of the showtime',
   })
   startTime: Date;
 
   @ApiProperty({
-    example: '2025-02-14T14:47:46.125405Z',
+    example: '2025-02-14T14:47:46.125Z',
     description: 'The end time of the showtime',
   })
   endTime: Date;
