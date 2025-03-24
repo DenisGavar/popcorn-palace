@@ -113,6 +113,13 @@ describe('AppController (e2e)', () => {
     endTime: '2025-02-14T14:47:46.125Z',
   };
 
+  const updateShowtimeDto = {
+    price: 22.2,
+    theater: 'Another Theater',
+    startTime: '2024-02-14T11:47:46.125Z',
+    endTime: '2024-02-14T14:47:46.125Z',
+  };
+
   const showtimeForeignKeyError = {
     message:
       'Foreign key constraint failed. A connected resource could not be found. Double-check your input and resubmit',
@@ -348,7 +355,45 @@ describe('AppController (e2e)', () => {
       });
     });
 
-    // '/showtimes/update/{id}'
+    describe('/showtimes/update/{id} (PUT)', () => {
+      it('successful update', async () => {
+        const responseMovie = await request(app.getHttpServer())
+          .post('/movies')
+          .send(createMovieDto1)
+          .expect(201);
+        const movieId = responseMovie.body.id;
+
+        const responseShowtime = await request(app.getHttpServer())
+          .post('/showtimes')
+          .send({ movieId: movieId, ...createShowtimeDto })
+          .expect(201);
+        const showtimeId = responseShowtime.body.id;
+
+        await request(app.getHttpServer())
+          .put(`/showtimes/update/${showtimeId}`)
+          .send(updateShowtimeDto)
+          .expect(204);
+
+        const responseGet = await request(app.getHttpServer())
+          .get(`/showtimes/${showtimeId}`)
+          .expect(200);
+
+        expect(responseGet.body).toEqual({
+          id: showtimeId,
+          movieId: movieId,
+          ...updateShowtimeDto,
+        });
+      });
+
+      it('error not found', async () => {
+        const response = await request(app.getHttpServer())
+          .put(`/showtimes/update/${anotherShowtimeId}`)
+          .send(updateShowtimeDto)
+          .expect(404);
+
+        expect(response.body).toEqual(showtimeNotFoundError);
+      });
+    });
 
     describe('/showtimes/{id} (DELETE)', () => {
       it('successful deletion', async () => {
